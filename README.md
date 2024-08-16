@@ -1,35 +1,35 @@
 Setup 
 
-. mkdir myproject
+-> mkdir myproject
 
-. cd myproject
+-> cd myproject
 
-. python3 -m venv venv
+-> python3 -m venv venv
 
 
 
 Activate
 
-. venv\Scripts\activate
+-> venv\Scripts\activate
 
 
 
 Install Flask
 
-. pip install Flask
+-> pip install Flask
 
-. pip install Flask-SQLAlchemy
+-> pip install Flask-SQLAlchemy
 
 
 
 Set environment variables in terminal
 
-. set FLASK_APP=app.py
+-> set FLASK_APP=app.py
 
-. set FLASK_ENV=development
+-> set FLASK_ENV=development
 
 
 
 Run the app 
 
-. flask run
+-> flask run
