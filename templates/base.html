@@ -14,7 +14,31 @@
     <div style="margin-top: 50px;" class="ui container">
         <h1 class="ui center aligned header">To Do App</h1>
 
-        <form class="ui form" action="/add" method="post">
+        <!-- Search Form -->
+        <form class="ui form" method="GET" action="{{ url_for('home') }}">
+            <div class="ui action input">
+                <input type="text" name="search" placeholder="Search tasks..." value="{{ search_query }}">
+                <button class="ui button" type="submit">Search</button>
+            </div>
+        </form>
+
+        <br>
+
+        <!-- Filter Form -->
+        <form class="ui form" method="GET" action="{{ url_for('home') }}">
+            <div class="ui action input">
+                <select class="ui dropdown" name="filter">
+                    <option value="">All</option>
+                    <option value="complete" {% if filter_status == 'complete' %}selected{% endif %}>Complete</option>
+                    <option value="incomplete" {% if filter_status == 'incomplete' %}selected{% endif %}>Incomplete</option>
+                </select>
+                <button class="ui button" type="submit">Filter</button>
+            </div>
+        </form>
+
+        <br>
+
+        <form class="ui form" action="{{ url_for('add', page=pagination.page) }}" method="post">
             <div class="field">
                 <label>Todo Title</label>
                 <input type="text" name="title" placeholder="Enter Todo..."><br>
@@ -26,7 +50,7 @@
 
         {% for todo in todo_list %}
         <div class="ui segment">
-            <p class="ui big header">{{todo.id }} | {{ todo.title }}</p>
+            <p class="ui big header">{{ todo.id }} | {{ todo.title }}</p>
 
             {% if todo.complete == False %}
             <span class="ui gray label">Not Complete</span>
@@ -34,10 +58,37 @@
             <span class="ui green label">Completed</span>
             {% endif %}
 
-            <a class="ui blue button" href="/update/{{ todo.id }}">Update</a>
-            <a class="ui red button" href="/delete/{{ todo.id }}">Delete</a>
+            <a class="ui blue button" href="{{ url_for('update', todo_id=todo.id, page=pagination.page) }}">Update</a>
+            <a class="ui red button" href="{{ url_for('delete', todo_id=todo.id, page=pagination.page) }}">Delete</a>
         </div>
         {% endfor %}
+
+        <!-- Pagination Bar -->
+        <div class="ui pagination menu">
+            {% if pagination.has_prev %}
+            <a class="item" href="{{ url_for('home', page=pagination.prev_num, search=search_query, filter=filter_status) }}">Previous</a>
+            {% else %}
+            <div class="disabled item">Previous</div>
+            {% endif %}
+
+            {% for page_num in pagination.iter_pages() %}
+            {% if page_num %}
+            {% if page_num == pagination.page %}
+            <div class="active item">{{ page_num }}</div>
+            {% else %}
+            <a class="item" href="{{ url_for('home', page=page_num, search=search_query, filter=filter_status) }}">{{ page_num }}</a>
+            {% endif %}
+            {% else %}
+            <div class="disabled item">...</div>
+            {% endif %}
+            {% endfor %}
+
+            {% if pagination.has_next %}
+            <a class="item" href="{{ url_for('home', page=pagination.next_num, search=search_query, filter=filter_status) }}">Next</a>
+            {% else %}
+            <div class="disabled item">Next</div>
+            {% endif %}
+        </div>
     </div>
 </body>
 
